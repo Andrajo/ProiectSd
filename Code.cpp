@@ -5,7 +5,7 @@
 using namespace std;
 
 ifstream input_element("first_page.in");
-ofstream output_element("rezult_page.out");
+ofstream output_element("result_page.out");
 
 
 
@@ -43,13 +43,6 @@ public:
     char* get_name()
     {
         return list_name;
-    }
-
-    void change_first_element(Lista new_list)
-    {
-        first_element_in_queue=new_list.get_first_element_in_queue();
-        list_name=new_list.get_name();
-        how_many_elements_are=new_list.get_how_many_elements();
     }
 
     int get_how_many_elements()
@@ -109,128 +102,159 @@ public:
 
     bool is_in_queue(int element)
     {
-        Element *current_element=first_element_in_queue;
-        while(current_element!=NULL)
+        if(how_many_elements_are>0)
         {
-            if(current_element->current_value==element)
+            Element *current_element=first_element_in_queue;
+            while(current_element!=NULL)
             {
-                cout<<"Is in queue";
-                return true;
+                if(current_element->current_value==element)
+                {
+                    cout<<"Is in queue";
+                    return true;
+                }
+                current_element=current_element->next_element;
             }
-            current_element=current_element->next_element;
+            cout<<"Is doesn't appear in the queue";
+            return false;
         }
-        cout<<"Is doesn't appear in the queue";
-        return false;
+        else
+        {
+            cout<<"There are no elements\n";
+        }
     }
 
     void delete_element(int element)
     {
-        Element *current_element=get_first_element_in_queue();
-        if(is_in_queue(element))
+        if(how_many_elements_are>0)
         {
-            if(current_element->current_value==element)
-            {
-                this->first_element_in_queue=first_element_in_queue->next_element;
-            }
-            else
-            {
-                while (current_element->next_element->current_value != element and current_element->next_element->next_element!=NULL)
-                {
-                    current_element = current_element->next_element;
-                }
-                if(current_element->next_element->next_element!=NULL)
-                {
-                    current_element->next_element = current_element->next_element->next_element;
-                    how_many_elements_are--;
-                }
-                else
-                {
-                    if(current_element->current_value==element)
-                    {
+            Element *current_element = get_first_element_in_queue();
+            if (is_in_queue(element)) {
+                if (current_element->current_value == element) {
+                    this->first_element_in_queue = first_element_in_queue->next_element;
+                } else {
+                    while (current_element->next_element->current_value != element and
+                           current_element->next_element->next_element != NULL) {
+                        current_element = current_element->next_element;
+                    }
+                    if (current_element->next_element->next_element != NULL) {
                         current_element->next_element = current_element->next_element->next_element;
                         how_many_elements_are--;
-                    }
-                    else
-                    {
-                        if(current_element->next_element->current_value==element)
-                        {
-                            current_element->next_element=NULL;
-                            last_element_in_queue=current_element;
+                    } else {
+                        if (current_element->current_value == element) {
+                            current_element->next_element = current_element->next_element->next_element;
                             how_many_elements_are--;
+                        } else {
+                            if (current_element->next_element->current_value == element) {
+                                current_element->next_element = NULL;
+                                last_element_in_queue = current_element;
+                                how_many_elements_are--;
+                            }
                         }
                     }
                 }
             }
         }
+        else
+        {
+            cout<<"There are no elements\n";
+        }
     }
 
     void the_smallest_element()
     {
-        cout<<minimum;
+        if(how_many_elements_are>0)
+        {
+            cout<<minimum;
+        }
+        else
+        {
+            cout<<"There are no elements\n";
+        }
     }
 
     void the_biggest_element()
     {
-        cout<<maximum;
+        if(how_many_elements_are>0)
+        {
+            cout<<maximum;
+        }
+        else
+        {
+            cout<<"There are no elements\n";
+        }
     }
 
     void the_next_element(int element)
     {
-        Element *the_smallest_big;
-        Element *current_element=first_element_in_queue;
-        bool was_found_one=false;
-        while(current_element->next_element!=NULL)
+        if(how_many_elements_are>0)
         {
-            if(was_found_one==true)
+            Element *the_smallest_big;
+            Element *current_element=first_element_in_queue;
+            bool was_found_one=false;
+            while(current_element->next_element!=NULL)
             {
-                if(current_element->current_value>element && current_element->current_value<the_smallest_big->current_value)
+                if(was_found_one==true)
                 {
-                    the_smallest_big=current_element;
+                    if(current_element->current_value>element && current_element->current_value<the_smallest_big->current_value)
+                    {
+                        the_smallest_big=current_element;
+                    }
                 }
+                else
+                {
+                    if(current_element->current_value>element)
+                    {
+                        the_smallest_big=current_element;
+                        was_found_one=true;
+                    }
+                }
+                current_element=current_element->next_element;
             }
+            if(was_found_one==false)
+                printf("There was no element bigger than %d",(element));
             else
-            {
-                if(current_element->current_value>element)
-                {
-                    the_smallest_big=current_element;
-                    was_found_one=true;
-                }
-            }
-            current_element=current_element->next_element;
+                cout<<the_smallest_big->current_value;
         }
-        if(was_found_one==false)
-            printf("There was no element bigger than %d",(element));
         else
-            cout<<the_smallest_big->current_value;
+        {
+            cout<<"There are no elements\n";
+        }
     }
 
     void the_element_before(int element)
     {
-        Element *the_biggest_small,*current_element=first_element_in_queue;
-        bool was_found_one=false;
-        while(current_element->next_element!=NULL)
+        if(how_many_elements_are>0)
         {
-            if(was_found_one==true)
+            Element *the_biggest_small,*current_element=first_element_in_queue;
+            bool was_found_one=false;
+            while(current_element->next_element!=NULL)
             {
-                if(current_element->current_value<element && current_element->current_value>the_biggest_small->current_value)
+                if(was_found_one==true)
                 {
-                    the_biggest_small=current_element;
+                    if(current_element->current_value<element && current_element->current_value>the_biggest_small->current_value)
+                    {
+                        the_biggest_small=current_element;
+                    }
                 }
+                else
+                {
+                    if(current_element->current_value<element)
+                    {
+                        the_biggest_small=current_element;
+                        was_found_one=true;
+                    }
+                }
+                current_element=current_element->next_element;
             }
+            if(was_found_one==false)
+                printf("There was no element smaller than %d",(element));
             else
-            {
-                if(current_element->current_value<element)
-                {
-                    the_biggest_small=current_element;
-                    was_found_one=true;
-                }
-            }
-            current_element=current_element->next_element;
+                cout<<the_biggest_small->current_value;
         }
-        if(was_found_one==false)
-            printf("There was no element smaller than %d",(element));
         else
-            cout<<the_biggest_small->current_value;
+        {
+            cout<<"There are no elements\n";
+        }
 
     }
 
@@ -249,7 +273,7 @@ public:
         }
         else
         {
-            cout<<"There are not enough elements in the list";
+            cout<<"There are not enough elements in the list\n";
         }
     }
 };
@@ -430,5 +454,4 @@ int main()
             Meniu.command_13(current_list);
         }
     }
-
 }
