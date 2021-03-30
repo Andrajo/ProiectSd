@@ -6,7 +6,7 @@ using namespace std;
 
 ifstream input_element("first_page.in");
 ofstream output_element("result_page.out");
-
+//no buna avra
 
 
 struct Element
