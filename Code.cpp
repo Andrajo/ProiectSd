@@ -6,12 +6,11 @@ using namespace std;
 
 ifstream input_element("first_page.in");
 ofstream output_element("result_page.out");
-//no buna avra
 
 
 struct Element
 {
-    int current_value;
+    long long current_value;
     Element *next_element;
 };
 
@@ -52,75 +51,88 @@ public:
 
     void insert_new_element()
     {
-        int value_of_the_new_element;
-        Element *new_element=new Element;
-/*
-    output_element<<"Please insert the value of the element you want to add:";
-    input_element>>value_of_the_new_element;
-    output_element<<value_of_the_new_element<<'\n';
-*/
-        cout<<"Please insert the value of the element you want to add:";
-        cin>>value_of_the_new_element;
-        cout<<'\n';
-
-        new_element->current_value=value_of_the_new_element;
-        new_element->next_element=NULL;
-
-
-        if(how_many_elements_are==0)
+        int how_many_did_you_add=0;
+        cout<<"\nInput a negative value to stop inserting numbers!\n";
+        while(true)
         {
-            first_element_in_queue=new_element;
-            minimum=new_element->current_value;
-            maximum=new_element->current_value;
-        }
-        else
-        {
-            last_element_in_queue->next_element=new_element;
-
-            if(minimum>new_element->current_value)
+            long long value_of_the_new_element;
+            /*
+                output_element<<"Please insert the value of the element you want to add:";
+                input_element>>value_of_the_new_element;
+                output_element<<value_of_the_new_element<<'\n';
+            */
+            cout << "Please insert the value of the element you want to add:";
+            while(true)
             {
-                minimum=new_element->current_value;
+                if(cin>>value_of_the_new_element)
+                    break;
+                cin.clear();
+                cin.ignore();
+                cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+            }
+            cout << '\n';
+
+            if(value_of_the_new_element<0)
+                break;
+
+            Element *new_element = new Element;
+
+            new_element->current_value = value_of_the_new_element;
+            new_element->next_element = NULL;
+
+
+            if (how_many_elements_are == 0) {
+                first_element_in_queue = new_element;
+                minimum = new_element->current_value;
+                maximum = new_element->current_value;
+            } else {
+                last_element_in_queue->next_element = new_element;
+
+                if (minimum > new_element->current_value) {
+                    minimum = new_element->current_value;
+                }
+
+                if (maximum < new_element->current_value) {
+                    maximum = new_element->current_value;
+                }
             }
 
-            if(maximum<new_element->current_value)
-            {
-                maximum=new_element->current_value;
-            }
+            last_element_in_queue = new_element;
+
+            how_many_elements_are++;
+            how_many_did_you_add++;
         }
-
-        last_element_in_queue=new_element;
-
-        how_many_elements_are++;
+        cout<<"\nYou added "<<how_many_did_you_add<<" more elements to the list!\n";
     }
 
     void showcase_elements(Element *element)
     {
-        printf("%d ",(element->current_value));
-        if(element->next_element!=NULL)
-            showcase_elements(element->next_element);
+        if(how_many_elements_are>0)
+        {
+            printf("%d ", (element->current_value));
+            if (element->next_element != NULL)
+                showcase_elements(element->next_element);
+        }
+        else
+        {
+            cout<<"There are no elements";
+        }
     }
 
     bool is_in_queue(int element)
     {
-        if(how_many_elements_are>0)
+        Element *current_element=first_element_in_queue;
+        while(current_element!=NULL)
         {
-            Element *current_element=first_element_in_queue;
-            while(current_element!=NULL)
+            if(current_element->current_value==element)
             {
-                if(current_element->current_value==element)
-                {
-                    cout<<"Is in queue";
-                    return true;
-                }
-                current_element=current_element->next_element;
+                cout<<"Is in queue";
+                return true;
             }
-            cout<<"Is doesn't appear in the queue";
-            return false;
+            current_element=current_element->next_element;
         }
-        else
-        {
-            cout<<"There are no elements\n";
-        }
+        cout<<"Is doesn't appear in the queue";
+        return false;
     }
 
     void delete_element(int element)
@@ -128,12 +140,16 @@ public:
         if(how_many_elements_are>0)
         {
             Element *current_element = get_first_element_in_queue();
-            if (is_in_queue(element)) {
-                if (current_element->current_value == element) {
+            if (is_in_queue(element))
+            {
+                if (current_element->current_value == element)
+                {
                     this->first_element_in_queue = first_element_in_queue->next_element;
-                } else {
+                }
+                else
+                {
                     while (current_element->next_element->current_value != element and
-                           current_element->next_element->next_element != NULL) {
+                           current_element->next_element->next_element != NULL){
                         current_element = current_element->next_element;
                     }
                     if (current_element->next_element->next_element != NULL) {
@@ -152,6 +168,7 @@ public:
                         }
                     }
                 }
+                cout<<"Element deleted successfully";
             }
         }
         else
@@ -193,7 +210,7 @@ public:
             bool was_found_one=false;
             while(current_element->next_element!=NULL)
             {
-                if(was_found_one==true)
+                if(was_found_one == true)
                 {
                     if(current_element->current_value>element && current_element->current_value<the_smallest_big->current_value)
                     {
@@ -210,7 +227,7 @@ public:
                 }
                 current_element=current_element->next_element;
             }
-            if(was_found_one==false)
+            if(was_found_one == false)
                 printf("There was no element bigger than %d",(element));
             else
                 cout<<the_smallest_big->current_value;
@@ -229,7 +246,7 @@ public:
             bool was_found_one=false;
             while(current_element->next_element!=NULL)
             {
-                if(was_found_one==true)
+                if(was_found_one == true)
                 {
                     if(current_element->current_value<element && current_element->current_value>the_biggest_small->current_value)
                     {
@@ -246,7 +263,7 @@ public:
                 }
                 current_element=current_element->next_element;
             }
-            if(was_found_one==false)
+            if(was_found_one == false)
                 printf("There was no element smaller than %d",(element));
             else
                 cout<<the_biggest_small->current_value;
@@ -277,7 +294,7 @@ public:
         }
     }
 };
-vector<Lista> data;
+vector<Lista> data_for_program;
 int how_much_data;
 
 class menu
@@ -289,7 +306,7 @@ public:
         cout<<"Name the list:";
         cin>>name_list;
         Lista A(name_list);
-        data.push_back(A);
+        data_for_program.push_back(A);
         how_much_data++;
     }
     Lista command_2(Lista &lista)
@@ -299,10 +316,10 @@ public:
             int input_position=-1;
             for(int i=0;i<how_much_data;i++)
             {
-                cout<<i<<data[i].get_name()<<'\n';
+                cout<<i<<data_for_program[i].get_name()<<'\n';
             }
             cin>>input_position;
-            return data[input_position];
+            return data_for_program[input_position];
         }
         else
         {
@@ -364,7 +381,7 @@ int main()
     menu Meniu;
     Lista prima_lista((char*)"prima lista");
     Lista current_list=prima_lista;
-    data.push_back(prima_lista);
+    data_for_program.push_back(prima_lista);
     how_much_data++;
     int number;
     while(true)
@@ -385,7 +402,14 @@ int main()
               " 13. How many elements are in the current list\n"
               " 0. Exit""";
         cout<<"\nInput a command:";
-        cin>>command;
+        while(true)
+        {
+            if(cin>>command)
+                break;
+            cin.clear();
+            cin.ignore();
+            cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour command will be:";
+        }
         if(command==0)
         {
             cout<<"Bye";
@@ -417,33 +441,104 @@ int main()
         }
         if(command==7)
         {
-            cout<<"Input a number:";
-            cin>>number;
-            Meniu.command_7(current_list,number);
+            if(current_list.get_how_many_elements()>0)
+            {
+                cout<<"Input a number:";
+                while(true)
+                {
+                    if(cin>>number)
+                        break;
+                    cin.clear();
+                    cin.ignore();
+                    cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+                }
+                Meniu.command_7(current_list,number);
+            }
+            else
+            {
+                cout<<"There is nothing";
+            }
         }
         if(command==8)
         {
-            cout<<"Input a number:";
-            cin>>number;
-            Meniu.command_8(current_list,number);
+            if (current_list.get_how_many_elements() > 0)
+            {
+                cout << "Input a number:";
+                while(true)
+                {
+                    if(cin>>number)
+                        break;
+                    cin.clear();
+                    cin.ignore();
+                    cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+                }
+                Meniu.command_8(current_list, number);
+
+            }
+            else
+            {
+                cout<<"There is nothing";
+            }
         }
         if(command==9)
         {
-            cout<<"Input a number:";
-            cin>>number;
-            Meniu.command_9(current_list,number);
+            if(current_list.get_how_many_elements()>0)
+            {
+                cout << "Input a number:";
+                while(true)
+                {
+                    if(cin>>number)
+                        break;
+                    cin.clear();
+                    cin.ignore();
+                    cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+                }
+                Meniu.command_9(current_list, number);
+            }
+            else
+            {
+                cout<<"There is nothing";
+            }
         }
         if(command==10)
         {
-            cout<<"Input a number:";
-            cin>>number;
-            Meniu.command_10(current_list,number);
+            if(current_list.get_how_many_elements()>0)
+            {
+                cout << "Input a number:";
+                while(true)
+                {
+                    if(cin>>number)
+                        break;
+                    cin.clear();
+                    cin.ignore();
+                    cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+                }
+                Meniu.command_10(current_list, number);
+            }
+            else
+            {
+                cout<<"There is nothing";
+            }
         }
         if(command==11)
         {
-            cout<<"Input a number:";
-            cin>>number;
-            Meniu.command_11(current_list,number);
+            if(current_list.get_how_many_elements()>0)
+            {
+                cout<<"Input a number:";
+                while(true)
+                {
+                    if(cin>>number)
+                        break;
+                    cin.clear();
+                    cin.ignore();
+                    cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+                }
+                Meniu.command_11(current_list,number);
+            }
+            else
+            {
+                cout<<"There is nothing";
+            }
         }
         if(command==12)
         {
