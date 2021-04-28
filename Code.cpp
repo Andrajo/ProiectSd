@@ -189,7 +189,66 @@ public:
                 new_element->previous_element=NULL;
                 new_element->after_10=NULL;
 
-                
+
+                if (how_many_elements_are == 0) {
+
+                    first_element_in_queue = new_element;
+                    the_one_how_gets = new_element;
+                }
+
+                if (how_many_elements_are == 1){
+
+                    if(new_element->current_value>first_element_in_queue->current_value){
+                        last_element_in_queue=new_element;
+                        first_element_in_queue->next_element=new_element;
+                        new_element->previous_element=first_element_in_queue;
+                    }
+                    else{
+                        first_element_in_queue->previous_element=new_element;
+                        new_element->next_element=first_element_in_queue;
+                        last_element_in_queue=first_element_in_queue;
+                        first_element_in_queue=new_element;
+                    }
+                }
+
+                if (how_many_elements_are > 1){
+
+                    if(new_element->current_value>first_element_in_queue->current_value and new_element->current_value<last_element_in_queue->current_value) {
+
+                        Element *element_for_verifying = first_element_in_queue;
+
+                        while (element_for_verifying->next_element != NULL) {
+                            if (new_element->current_value < element_for_verifying->current_value) {
+                                break;
+                            }
+                            element_for_verifying=element_for_verifying->next_element;
+                        }
+
+                        Element *previous_element_after_verifying = element_for_verifying->previous_element;
+                        previous_element_after_verifying->next_element = new_element;
+                        element_for_verifying->previous_element = new_element;
+                        new_element->previous_element = previous_element_after_verifying;
+                        new_element->next_element = element_for_verifying;
+                    }
+
+                    if(new_element->current_value<first_element_in_queue->current_value){
+                        new_element->next_element=first_element_in_queue;
+                        first_element_in_queue->previous_element=new_element;
+                        first_element_in_queue=new_element;
+                    }
+
+                    if(new_element->current_value>last_element_in_queue->current_value){
+                        new_element->previous_element=last_element_in_queue;
+                        last_element_in_queue->next_element=new_element;
+                        last_element_in_queue = new_element;
+                    }
+                }
+
+                how_many_elements_are++;
+                if(how_many_elements_are%10==0){
+                    the_one_how_gets->after_10=new_element;
+                    the_one_how_gets=new_element;
+                }
             }
 
         }
@@ -250,8 +309,10 @@ public:
                 if(current_element->next_element!=NULL)
                     current_element->next_element->previous_element = current_element->previous_element;
             }
-
-            cout<<"Element deleted successfully";
+            if(in_queue==1)
+                cout<<"Element deleted successfully";
+            else
+                cout<<"The element you want to delete is not in the list";
         }
         else{
             cout<<"There are no elements\n";
