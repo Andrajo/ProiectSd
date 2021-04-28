@@ -56,7 +56,7 @@ public:
 
     void insert_new_element(){
 
-        cout<<"How would you like to insert your new variables?\n1) Manually from console;\n2) Auto from a folder;";
+        cout<<"How would you like to insert your new variables?\n1) Manually from console;\n2) Auto from a folder;\nYour variant:";
         int mode_for_inserting;
 
         while(true) {
@@ -181,7 +181,18 @@ public:
         if(mode_for_inserting==2){
 
             long long value_of_the_new_element;
-            while(input_element>>value_of_the_new_element){
+            while(!input_element.eof()){
+
+                while (true) {
+                    if (input_element >> value_of_the_new_element)
+                        break;
+                    else {
+                        input_element.clear();
+                        input_element.ignore();
+                        break;
+                    }
+                }
+
                 Element *new_element = new Element;
 
                 new_element->current_value = value_of_the_new_element;
@@ -250,7 +261,6 @@ public:
                     the_one_how_gets=new_element;
                 }
             }
-
         }
     }
 
@@ -721,6 +731,6 @@ int main(){
             cout << "Invalid option";
         }
 
-            //sleep(10);
-        }
+        //sleep(10);
+    }
 }
