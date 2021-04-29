@@ -6,10 +6,13 @@
 
 using namespace std;
 
-ifstream input_element("first_page.in");
+ifstream input_element("first_list.in"); //the file that contains the elements of the first list
+ifstream input_secondary_elements("second_list.in"); //the file that contains the elements of the second list or a second wave of data for the first list
+ifstream input_command("command_page.in"); //the file that contains the commands that the program needs to take in order to work
+ofstream output_result("results.out"); //the file with the results from the commands
 
 
-struct Element{
+struct Element{ //The declaration of the element and it's values
 
     long long current_value;
     Element *next_element;
@@ -20,7 +23,7 @@ struct Element{
 
 
 
-class Lista{
+class Lista{ //The declaration of the list that will contain the elements we add with the structure above
 
     long long how_many_elements_are;
     Element *first_element_in_queue;
@@ -36,33 +39,33 @@ public:
         this->last_element_in_queue=NULL;
         this->how_many_elements_are=0;
         strcpy(this->list_name,name_list);
-    }
+    } // Constructor for our list, this will declare the pointers as NULL until they are assigned.
 
     Element* get_first_element_in_queue(){
         return first_element_in_queue;
-    }
+    } // This getter will return the first element in the list
 
     Element* get_last_element_in_queue(){
         return last_element_in_queue;
-    }
+    } // This getter will return the last element in the list
 
     char* get_name(){
         return list_name;
-    }
+    } // This getter will return the name of the list
 
     void insert_new_element(){
 
-        cout<<"How would you like to insert your new variables?\n1) Manually from console;\n2) Auto from a folder;\nYour variant:";
+        output_result<<"How would you like to insert your new variables?\n1) Manually from console;\n2) Auto from a folder;\nYour variant:";
         int mode_for_inserting;
 
         while(true) {
 
             while (true) {
-                if (cin >> mode_for_inserting)
+                if (input_command >> mode_for_inserting)
                     break;
-                cin.clear();
-                cin.ignore();
-                cout << "\nInvalid type for the input;\nPlease input a integer!\n\nYour command will be:";
+                input_command.clear();
+                input_command.ignore();
+                output_result << "\nInvalid type for the input;\nPlease input a integer!\n\nYour command will be:";
             }
 
             int correct_value_for_inserting=1;
@@ -72,6 +75,8 @@ public:
             if(correct_value_for_inserting==1)
                 break;
         }
+
+        output_result<<mode_for_inserting<<'\n';
 
         if(mode_for_inserting==1) {
 
@@ -270,9 +275,9 @@ public:
                 how_many_elements_are++;
                 how_many_did_you_add++;
             }
-            cout<<"You added "<<how_many_did_you_add<<" more elements to the current list!\n";
+            output_result<<"You added "<<how_many_did_you_add<<" more elements to the current list!\n";
         }
-    }
+    } //This function will insert new elements in the current list in a growing manner
 
     void delete_element(long long element){
 
@@ -284,7 +289,6 @@ public:
             while(current_element->next_element!=NULL){
                 if(current_element->after_10!=NULL and current_element->after_10->current_value<=element) {
                     current_element=current_element->after_10;
-                    cout<<"KEK ";
                 }
                 else {
                     if (current_element->current_value == element) {
@@ -302,29 +306,29 @@ public:
                     current_element->next_element->previous_element = current_element->previous_element;
             }
             if(in_queue==1)
-                cout<<"Element deleted successfully";
+                output_result<<"Element deleted successfully\n";
             else
-                cout<<"The element you want to delete is not in the list";
+                output_result<<"The element you want to delete is not in the list\n";
         }
         else{
-            cout<<"There are no elements\n";
+            output_result<<"There are no elements\n";
         }
-    }
+    } //This function will delete any element from the list , if it is present
 
     void the_smallest_element(){
 
         if(how_many_elements_are>0)
-            cout<<first_element_in_queue->current_value;
+            output_result<<first_element_in_queue->current_value<<'\n';
         else
-            cout<<"There are no elements\n";
-    }
+            output_result<<"There are no elements\n";
+    } //This function will print the smallest element in the list
 
     void the_biggest_element(){
         if(how_many_elements_are>0)
-            cout<<last_element_in_queue->current_value;
+            output_result<<last_element_in_queue->current_value<<'\n';
         else
-            cout<<"There are no elements\n";
-    }
+            output_result<<"There are no elements\n";
+    } //This function will print the largest element in the list
 
     void the_next_element(long long element){
         if(how_many_elements_are>0){
@@ -351,14 +355,14 @@ public:
             }
 
             if(was_found_one == false)
-                printf("There was no element bigger than %d",(element));
+                output_result<<"There was no element bigger than "<<element<<'\n';
             else
-                cout<<the_smallest_big->current_value;
+                output_result<<the_smallest_big->current_value<<'\n';
         }
         else{
-            cout<<"There are no elements\n";
+            output_result<<"There are no elements\n";
         }
-    }
+    } //This function will show if there is a element larger then the number you enter
 
     void the_element_before(long long element){
 
@@ -385,15 +389,15 @@ public:
             }
 
             if(was_found_one == false)
-                printf("There was no element smaller than %d",(element));
+                output_result<<"There was no element smaller than "<<element<<'\n';
             else
-                cout<<the_biggest_small->current_value;
+                output_result<<the_biggest_small->current_value<<'\n';
         }
         else{
-            cout<<"There are no elements\n";
+            output_result<<"There are no elements\n";
         }
 
-    }
+    } //This function will show if there is a element smaller then the number you enter
 
     void the_k_element(long long k){
 
@@ -407,7 +411,7 @@ public:
                 current_element=current_element->previous_element;
             }
 
-            cout<<current_element->current_value;
+            output_result<<current_element->current_value<<'\n';
         }
 
         if(k<=how_many_elements_are/2 and k!=1){
@@ -420,25 +424,25 @@ public:
                 current_element=current_element->next_element;
             }
 
-            cout<<current_element->current_value;
+            output_result<<current_element->current_value<<'\n';
         }
 
         if(k==how_many_elements_are){
-            cout<<last_element_in_queue->current_value;
+            output_result<<last_element_in_queue->current_value<<'\n';
         }
 
         if(k==1){
-            cout<<first_element_in_queue->current_value;
+            output_result<<first_element_in_queue->current_value<<'\n';
         }
 
         if(k>how_many_elements_are){
-            cout<<"There are not enough elements in the list\n";
+            output_result<<"There are not enough elements in the list\n";
         }
-    }
+    } //This function will print the k element in the list, if there are k or more elements in this list
 
     long long get_how_many_elements(){
         return how_many_elements_are;
-    }
+    } //This will return the number of elements the list contains
 
     bool is_in_queue(long long element){
 
@@ -450,32 +454,32 @@ public:
             }
             else {
                 if (current_element->current_value == element) {
-                    cout << "Is in queue\n";
+                    output_result << "Is in queue\n";
                     return true;
                 }
                 current_element = current_element->next_element;
             }
         }
 
-        cout << "Is doesn't appear in the queue\n";
+        output_result << "Is doesn't appear in the queue\n";
         return false;
-    }
+    } //This will print if the element you introduce is in the list
 
     void showcase_elements(Element *element){
 
         if(how_many_elements_are>0){
-            printf("%lld ", (element->current_value));
+            output_result<<element->current_value<<" ";
             if (element->next_element != NULL)
                 showcase_elements(element->next_element);
         }
         else{
-            cout<<"There are no elements";
+            output_result<<"There are no elements";
         }
-    }
+    } //This will print all the elements in the list
 };
 
-vector<Lista> data_for_program;
-long long how_much_data;
+vector<Lista> data_for_program; //The vector will retain the List as an element so you will be able to have more List with different data in each of them at the same time
+long long how_much_data; //This variable will retain the number of elements in the vector
 
 class menu{
 public:
@@ -486,7 +490,7 @@ public:
 
         while(true){
 
-            cout<<"Name the list:";
+            output_result<<"Name the list:";
             cin>>name_list;
             int name_is_ok=1;
 
@@ -504,7 +508,7 @@ public:
         Lista A(name_list);
         data_for_program.push_back(A);
         how_much_data++;
-    }
+    } //Create list
 
     void command_2(Lista &lista, Lista &lista2){
 
@@ -514,52 +518,52 @@ public:
             swap(lista, lista2);
             cout<<"You have successfully transferred to "<<lista.get_name();
         }
-    }
+    } //Change current list
 
     void command_3(Lista &lista){
         lista.insert_new_element();
-    }
+    } //Insert element
 
     void command_4(Lista &lista){
         lista.the_smallest_element();
-    }
+    } //Minim of the current list
 
     void command_5(Lista &lista){
         lista.the_biggest_element();
-    }
+    } //Maxim of the current list
 
     void command_6(Lista &lista){
         lista.showcase_elements(lista.get_first_element_in_queue());
-    }
+    } //Showcase elements of the current list
 
     void command_7(Lista &lista,long long  number){
         lista.is_in_queue(number);
-    }
+    } //Is in the current list?
 
     void command_8(Lista &lista,long long  number){
         lista.delete_element(number);
-    }
+    } //Delete from the current list
 
     void command_9(Lista &lista,long long  number){
         lista.the_k_element(number);
-    }
+    } //The K element
 
     void command_10(Lista &lista,long long  number){
         lista.the_next_element(number);
-    }
+    } //Next element from x
 
     void command_11(Lista &lista,long long number){
         lista.the_element_before(number);
-    }
+    } //Previous element from x
 
     void command_12(Lista &lista){
-        cout<<lista.get_name();
-        cout<<"\n"<<&lista;
-    }
+        output_result<<lista.get_name();
+        output_result<<"\n"<<&lista<<'\n';
+    } //Name and memory place of the current list
 
     void command_13(Lista &lista){
-        cout<<lista.get_how_many_elements();
-    }
+        output_result<<lista.get_how_many_elements()<<'\n';
+    } //How many elements are in the current list
 };
 
 void presentation(){
@@ -578,8 +582,8 @@ void presentation(){
     " 12. Name and memory place of the current list\n"
     " 13. How many elements are in the current list\n"
     " 0. Exit""";
-    cout<<"\nInput a command:";
-}
+    output_result<<"\nInput a command:";
+} //A function to print out the options of the menu
 
 int command;
 
@@ -597,15 +601,17 @@ int main(){
         presentation();
 
         while(true){
-            if(cin>>command)
+            if(input_command>>command)
                 break;
-            cin.clear();
-            cin.ignore();
-            cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour command will be:";
+            input_command.clear();
+            input_command.ignore();
+            output_result<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour command will be:";
         }
 
+        output_result<<command<<'\n';
+
         if(command==0){
-            cout<<"Bye!";
+            output_result<<"Bye!";
             break;
         }
 
@@ -615,20 +621,20 @@ int main(){
 
         if(command==2) {
 
-            cout<<"You are in "<<current_list.get_name()<<"\n";
+            output_result<<"You are in "<<current_list.get_name()<<"\n";
             int input_position_for_new_list=-1;
 
             for(long long i=1;i<how_much_data;i++){
-                cout<<i<<". "<<data_for_program[i].get_name()<<'\n';
+                output_result<<i<<". "<<data_for_program[i].get_name()<<'\n';
             }
 
             while(true){
 
-                cin>>input_position_for_new_list;
+                input_command>>input_position_for_new_list;
                 if(input_position_for_new_list>0 and input_position_for_new_list<=how_much_data)
                     break;
                 else
-                    cout<<"Invalid position, please insert a number of a list:";
+                    output_result<<"Invalid position, please insert a number of a list:";
             }
 
             Meniu.command_2(current_list,data_for_program[input_position_for_new_list]);
@@ -647,104 +653,116 @@ int main(){
         }
 
         if(command==6){
+            output_result<<'\n';
             Meniu.command_6(current_list);
+            output_result<<'\n';
         }
 
         if(command==7){
             if(current_list.get_how_many_elements()>0){
 
-                cout<<"Input a number:";
+                output_result<<"Input a number:";
 
                 while(true){
-                    if(cin>>number)
+                    if(input_command>>number)
                         break;
-                    cin.clear();
-                    cin.ignore();
-                    cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+                    input_command.clear();
+                    input_command.ignore();
+                    output_result<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
                 }
+
+                output_result<<number<<'\n';
 
                 Meniu.command_7(current_list,number);
             }
             else{
-                cout<<"There is nothing";
+                output_result<<"There is nothing";
             }
         }
 
         if(command==8){
             if (current_list.get_how_many_elements() > 0){
 
-                cout << "Input a number:";
+                output_result << "Input a number:";
 
                 while(true){
-                    if(cin>>number)
+                    if(input_command>>number)
                         break;
-                    cin.clear();
-                    cin.ignore();
-                    cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+                    input_command.clear();
+                    input_command.ignore();
+                    output_result<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
                 }
+
+                output_result<<number<<'\n';
 
                 Meniu.command_8(current_list, number);
             }
             else{
-                cout<<"There is nothing";
+                output_result<<"There is nothing";
             }
         }
 
         if(command==9){
             if(current_list.get_how_many_elements()>0){
 
-                cout << "Input a number:";
+                output_result << "Input a number:";
 
                 while(true){
-                    if(cin>>number)
+                    if(input_command>>number)
                         break;
-                    cin.clear();
-                    cin.ignore();
-                    cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+                    input_command.clear();
+                    input_command.ignore();
+                    output_result<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
                 }
+
+                output_result<<number<<'\n';
 
                 Meniu.command_9(current_list, number);
             }
             else{
-                cout<<"There is nothing";
+                output_result<<"There is nothing";
             }
         }
 
         if(command==10){
             if(current_list.get_how_many_elements()>0){
 
-                cout << "Input a number:";
+                output_result << "Input a number:";
 
                 while(true){
-                    if(cin>>number)
+                    if(input_command>>number)
                         break;
-                    cin.clear();
-                    cin.ignore();
-                    cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+                    input_command.clear();
+                    input_command.ignore();
+                    output_result<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
                 }
+
+                output_result<<number<<'\n';
 
                 Meniu.command_10(current_list, number);
             }
             else{
-                cout<<"There is nothing";
+                output_result<<"There is nothing";
             }
         }
 
         if(command==11){
             if(current_list.get_how_many_elements()>0){
-                cout<<"Input a number:";
+                output_result<<"Input a number:";
                 while(true){
-                    if(cin>>number)
+                    if(input_command>>number)
                         break;
-                    cin.clear();
-                    cin.ignore();
-                    cout<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
+                    input_command.clear();
+                    input_command.ignore();
+                    output_result<<"\nInvalid type for the input;\nPlease input a integer!\n\nYour number will be:";
                 }
+
+                output_result<<number<<'\n';
 
                 Meniu.command_11(current_list,number);
             }
             else{
-                cout<<"There is nothing";
+                output_result<<"There is nothing";
             }
         }
 
@@ -756,7 +774,7 @@ int main(){
             Meniu.command_13(current_list);
         }
         if(command>13 or command<0) {
-            cout << "Invalid option";
+            output_result << "Invalid option";
         }
 
         //sleep(4);
