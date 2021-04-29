@@ -7,7 +7,6 @@
 using namespace std;
 
 ifstream input_element("first_page.in");
-ofstream output_element("result_page.out");
 
 
 struct Element{
@@ -16,6 +15,7 @@ struct Element{
     Element *next_element;
     Element *previous_element;
     Element *after_10;
+    Element *before_10;
 };
 
 
@@ -48,10 +48,6 @@ public:
 
     char* get_name(){
         return list_name;
-    }
-
-    long long get_how_many_elements(){
-        return how_many_elements_are;
     }
 
     void insert_new_element(){
@@ -111,6 +107,7 @@ public:
                 new_element->next_element = NULL;
                 new_element->previous_element=NULL;
                 new_element->after_10=NULL;
+                new_element->before_10=NULL;
 
 
                 if (how_many_elements_are == 0) {
@@ -152,24 +149,29 @@ public:
                         element_for_verifying->previous_element = new_element;
                         new_element->previous_element = previous_element_after_verifying;
                         new_element->next_element = element_for_verifying;
+
                     }
 
-                    if(new_element->current_value<first_element_in_queue->current_value){
-                        new_element->next_element=first_element_in_queue;
-                        first_element_in_queue->previous_element=new_element;
-                        first_element_in_queue=new_element;
-                    }
 
-                    if(new_element->current_value>last_element_in_queue->current_value){
+                    if(new_element->current_value>=last_element_in_queue->current_value){
                         new_element->previous_element=last_element_in_queue;
                         last_element_in_queue->next_element=new_element;
                         last_element_in_queue = new_element;
+
+                    }
+                    else
+                    if(new_element->current_value<=first_element_in_queue->current_value){
+                        new_element->next_element=first_element_in_queue;
+                        first_element_in_queue->previous_element=new_element;
+                        first_element_in_queue=new_element;
+
                     }
                 }
 
                 how_many_elements_are++;
                 if(how_many_elements_are%10==0){
                     the_one_how_gets->after_10=new_element;
+                    new_element->before_10=the_one_how_gets;
                     the_one_how_gets=new_element;
                 }
                 how_many_did_you_add++;
@@ -180,17 +182,16 @@ public:
 
         if(mode_for_inserting==2){
 
-            long long value_of_the_new_element;
+            long long value_of_the_new_element,how_many_did_you_add=0;
+
             while(!input_element.eof()){
 
                 while (true) {
                     if (input_element >> value_of_the_new_element)
                         break;
-                    else {
-                        input_element.clear();
-                        input_element.ignore();
-                        break;
-                    }
+                    input_element.clear();
+                    input_element.ignore();
+                    break;
                 }
 
                 Element *new_element = new Element;
@@ -199,6 +200,7 @@ public:
                 new_element->next_element = NULL;
                 new_element->previous_element=NULL;
                 new_element->after_10=NULL;
+                new_element->before_10=NULL;
 
 
                 if (how_many_elements_are == 0) {
@@ -240,76 +242,56 @@ public:
                         element_for_verifying->previous_element = new_element;
                         new_element->previous_element = previous_element_after_verifying;
                         new_element->next_element = element_for_verifying;
+
                     }
 
-                    if(new_element->current_value<first_element_in_queue->current_value){
-                        new_element->next_element=first_element_in_queue;
-                        first_element_in_queue->previous_element=new_element;
-                        first_element_in_queue=new_element;
-                    }
 
-                    if(new_element->current_value>last_element_in_queue->current_value){
+                    if(new_element->current_value>=last_element_in_queue->current_value){
                         new_element->previous_element=last_element_in_queue;
                         last_element_in_queue->next_element=new_element;
                         last_element_in_queue = new_element;
+
                     }
+                    else
+                        if(new_element->current_value<=first_element_in_queue->current_value){
+                            new_element->next_element=first_element_in_queue;
+                            first_element_in_queue->previous_element=new_element;
+                            first_element_in_queue=new_element;
+
+                        }
+                }
+
+                if(how_many_elements_are%10==0){
+                    the_one_how_gets->after_10=new_element;
+                    new_element->before_10=the_one_how_gets;
+                    the_one_how_gets=new_element;
                 }
 
                 how_many_elements_are++;
-                if(how_many_elements_are%10==0){
-                    the_one_how_gets->after_10=new_element;
-                    the_one_how_gets=new_element;
-                }
+                how_many_did_you_add++;
             }
+            cout<<"You added "<<how_many_did_you_add<<" more elements to the current list!\n";
         }
     }
 
-    void showcase_elements(Element *element){
-
-        if(how_many_elements_are>0){
-            printf("%lld ", (element->current_value));
-            if (element->next_element != NULL)
-                showcase_elements(element->next_element);
-        }
-        else{
-            cout<<"There are no elements";
-        }
-    }
-
-    bool is_in_queue(int element){
-
-        Element *current_element = first_element_in_queue;
-
-        if(current_element->after_10!=NULL and current_element->after_10->current_value<element) {
-            current_element=current_element->after_10;
-        }
-        while (current_element != NULL) {
-            if (current_element->current_value == element) {
-                cout << "Is in queue\n";
-                return true;
-            }
-            current_element = current_element->next_element;
-        }
-
-        cout << "Is doesn't appear in the queue\n";
-        return false;
-    }
-
-    void delete_element(int element){
+    void delete_element(long long element){
 
         if(how_many_elements_are>0){
 
             Element *current_element = first_element_in_queue;
-            if(current_element->after_10!=NULL and current_element->after_10->current_value<element) {
-                current_element=current_element->after_10;
-            }
             int in_queue=0;
 
             while(current_element->next_element!=NULL){
-                current_element=current_element->next_element;
-                if(current_element->current_value==element){
-                    in_queue=1;
-                    break;
+                if(current_element->after_10!=NULL and current_element->after_10->current_value<=element) {
+                    current_element=current_element->after_10;
+                    cout<<"KEK ";
+                }
+                else {
+                    if (current_element->current_value == element) {
+                        in_queue = 1;
+                        break;
+                    }
+                    current_element = current_element->next_element;
                 }
             }
 
@@ -344,25 +326,28 @@ public:
             cout<<"There are no elements\n";
     }
 
-    void the_next_element(int element){
+    void the_next_element(long long element){
         if(how_many_elements_are>0){
 
             Element *the_smallest_big;
             Element *current_element=first_element_in_queue;
-            if(current_element->after_10!=NULL and current_element->after_10->current_value<element) {
-                current_element=current_element->after_10;
-            }
             bool was_found_one=false;
 
             while(current_element->next_element!=NULL){
 
-                if(current_element->current_value>element){
-                    the_smallest_big=current_element;
-                    was_found_one=true;
-                    break;
+                if(current_element->after_10!=NULL and current_element->after_10->current_value<=element) {
+                    current_element=current_element->after_10;
                 }
+                else {
 
-                current_element=current_element->next_element;
+                    if (current_element->current_value > element) {
+                        the_smallest_big = current_element;
+                        was_found_one = true;
+                        break;
+                    }
+
+                    current_element = current_element->next_element;
+                }
             }
 
             if(was_found_one == false)
@@ -375,7 +360,7 @@ public:
         }
     }
 
-    void the_element_before(int element){
+    void the_element_before(long long element){
 
         if(how_many_elements_are>0){
 
@@ -384,13 +369,19 @@ public:
 
             while(current_element->previous_element!=NULL) {
 
-                if (current_element->current_value < element) {
-                    the_biggest_small = current_element;
-                    was_found_one = true;
-                    break;
+                if(current_element->before_10!=NULL and current_element->before_10->current_value>=element) {
+                    current_element=current_element->before_10;
                 }
+                else {
 
-                current_element = current_element->previous_element;
+                    if (current_element->current_value < element) {
+                        the_biggest_small = current_element;
+                        was_found_one = true;
+                        break;
+                    }
+
+                    current_element = current_element->previous_element;
+                }
             }
 
             if(was_found_one == false)
@@ -404,7 +395,7 @@ public:
 
     }
 
-    void the_k_element(int k){
+    void the_k_element(long long k){
 
         if(k>how_many_elements_are/2 and k!=how_many_elements_are){
 
@@ -444,10 +435,47 @@ public:
             cout<<"There are not enough elements in the list\n";
         }
     }
+
+    long long get_how_many_elements(){
+        return how_many_elements_are;
+    }
+
+    bool is_in_queue(long long element){
+
+        Element *current_element = first_element_in_queue;
+
+        while (current_element != NULL) {
+            if(current_element->after_10!=NULL and current_element->after_10->current_value<=element) {
+                current_element=current_element->after_10;
+            }
+            else {
+                if (current_element->current_value == element) {
+                    cout << "Is in queue\n";
+                    return true;
+                }
+                current_element = current_element->next_element;
+            }
+        }
+
+        cout << "Is doesn't appear in the queue\n";
+        return false;
+    }
+
+    void showcase_elements(Element *element){
+
+        if(how_many_elements_are>0){
+            printf("%lld ", (element->current_value));
+            if (element->next_element != NULL)
+                showcase_elements(element->next_element);
+        }
+        else{
+            cout<<"There are no elements";
+        }
+    }
 };
 
 vector<Lista> data_for_program;
-int how_much_data;
+long long how_much_data;
 
 class menu{
 public:
@@ -462,7 +490,7 @@ public:
             cin>>name_list;
             int name_is_ok=1;
 
-            for(int i=0;i<how_much_data;i++){
+            for(long long i=0;i<how_much_data;i++){
                 if(strcmp(data_for_program[i].get_name(),name_list)==0){
                     name_is_ok=0;
                     cout<<"\nName already in use\n";
@@ -504,23 +532,23 @@ public:
         lista.showcase_elements(lista.get_first_element_in_queue());
     }
 
-    void command_7(Lista &lista,int number){
+    void command_7(Lista &lista,long long  number){
         lista.is_in_queue(number);
     }
 
-    void command_8(Lista &lista,int number){
+    void command_8(Lista &lista,long long  number){
         lista.delete_element(number);
     }
 
-    void command_9(Lista &lista,int number){
+    void command_9(Lista &lista,long long  number){
         lista.the_k_element(number);
     }
 
-    void command_10(Lista &lista,int number){
+    void command_10(Lista &lista,long long  number){
         lista.the_next_element(number);
     }
 
-    void command_11(Lista &lista,int number){
+    void command_11(Lista &lista,long long number){
         lista.the_element_before(number);
     }
 
@@ -534,7 +562,7 @@ public:
     }
 };
 
-void prezentation(){
+void presentation(){
     cout<<"""\n"
     " 1. Create list\n"
     " 2. Change current list\n"
@@ -562,11 +590,11 @@ int main(){
     Lista current_list=prima_lista;
     data_for_program.push_back(prima_lista);
     how_much_data++;
-    int number;
+    long long number;
 
     while(true){
 
-        prezentation();
+        presentation();
 
         while(true){
             if(cin>>command)
@@ -590,7 +618,7 @@ int main(){
             cout<<"You are in "<<current_list.get_name()<<"\n";
             int input_position_for_new_list=-1;
 
-            for(int i=1;i<how_much_data;i++){
+            for(long long i=1;i<how_much_data;i++){
                 cout<<i<<". "<<data_for_program[i].get_name()<<'\n';
             }
 
@@ -731,6 +759,7 @@ int main(){
             cout << "Invalid option";
         }
 
-        //sleep(10);
+        //sleep(4);
+        //system("clear");
     }
 }
