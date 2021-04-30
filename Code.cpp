@@ -466,15 +466,18 @@ public:
         Element *current_element = first_element_in_queue;
 
         while (current_element != NULL) {
-            if(current_element->after_10!=NULL and current_element->after_10->current_value<=element) {
+            if(current_element->after_10!=NULL and current_element->after_10->current_value<element) {
                 current_element=current_element->after_10; //is using the skip list to get faster in the range of the element we want
             }
             else {
+                current_element = current_element->next_element;
                 if (current_element->current_value == element) {
                     output_result << "Is in queue\n";
                     return true; //if the element is found, return true
                 }
-                current_element = current_element->next_element;
+                if(current_element->current_value>element){
+                    break;
+                }
             }
         }
 
