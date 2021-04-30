@@ -1,13 +1,31 @@
-3 2
+3 2 //primul 3 reprezinta comanda 3 iar 2 reprezinta modul 2 de inserare de elemente(citire din fisier) pentru lista care se creeaza automat cand programul e rulat
+1 // reprezinta comanda 1 , comanda de creeare a unei noi liste
+second_list //acesta reprezinta inputul pentru numele listei, acesta poate fi format dintr-un singur cuvant de lungime maxima 101 caractere
+2 1 //comada pentru tranzitia de la lista curenta(lista default) la lista de pozitie 1. Dupa schimbare lista de pozitie 1 va deveni lista default
+14 //comanda pentru a citi din al 2-lea fisier separat pentru ca lista creaata de noi sa aibe elemente
+//incepem sa facem operatii pe multime sa aratam ca functioneaza normal
+5 //maximul listei
+7 345// este 345 in lista?
+7 8674
+8 8674// sterge 8674
+7 8674
+9 3645// printeaza al 3645-lea element din lista
+10 97865// succesorul lui 97865
+11 432// predecesorul lui 432
+//finalul operatiilor pe multime
+12
+13 //12 si 13 reprezinta comenzile pentru numele listei, pozitia in memorie si numarul de elemente pe care il contine 
+2 1 //aceasta comanda va schimba lista din nou si ne vom intoarce in lista default
 12
 13
-1
-second_list
-2 1
-14
-12
-13
-2 1
-12
-13
+//incepem sa facem operatii pe multime sa aratam ca functioneaza normal
+5 //maximul listei
+7 345// este 345 in lista?
+7 8674
+8 8674// sterge 8674
+7 8674
+9 3645// printeaza al 3645-lea element din lista
+10 97865// succesorul lui 97865
+11 432// predecesorul lui 432
+//finalul operatiilor pe multime
 0
