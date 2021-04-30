@@ -298,7 +298,7 @@ public:
                 how_many_elements_are++;
                 how_many_did_you_add++;
             }
-            output_result<<"You added "<<how_many_did_you_add<<" more elements to the current list!\n";
+            output_result<<"You added "<<how_many_did_you_add<<" more elements in "<<list_name<<"\n";
         }
     } //This function will insert new elements in the current list in a growing manner
 
@@ -328,6 +328,9 @@ public:
                 if (current_element->next_element != NULL)
                     current_element->next_element->previous_element = current_element->previous_element;
                 output_result << "Element deleted successfully\n";
+
+                how_many_elements_are--;
+
             }// this if will delete the element in both ways, in the previous and in the next, if there is a next or a previous
             else
                 output_result<<"The element you want to delete is not in the list\n";
@@ -340,14 +343,14 @@ public:
     void the_smallest_element(){
 
         if(how_many_elements_are>0)
-            output_result<<first_element_in_queue->current_value<<'\n';
+            output_result<<"Minim:"<<first_element_in_queue->current_value<<'\n';
         else
             output_result<<"There are no elements\n";
     } //This function will print the smallest element in the list
 
     void the_biggest_element(){
         if(how_many_elements_are>0)
-            output_result<<last_element_in_queue->current_value<<'\n';
+            output_result<<"Maxim:"<<last_element_in_queue->current_value<<'\n';
         else
             output_result<<"There are no elements\n";
     } //This function will print the largest element in the list
@@ -379,7 +382,7 @@ public:
             if(was_found_one == false)
                 output_result<<"There was no element bigger than "<<element<<'\n';
             else
-                output_result<<the_smallest_big->current_value<<'\n';
+                output_result<<"Successor:"<<the_smallest_big->current_value<<'\n';
         }
         else{
             output_result<<"There are no elements\n";
@@ -413,7 +416,7 @@ public:
             if(was_found_one == false)
                 output_result<<"There was no element smaller than "<<element<<'\n';
             else
-                output_result<<the_biggest_small->current_value<<'\n';
+                output_result<<"Predecessor:"<<the_biggest_small->current_value<<'\n';
         }
         else{
             output_result<<"There are no elements\n";
@@ -438,7 +441,7 @@ public:
                 current_element=current_element->previous_element;
             }
 
-            output_result<<current_element->current_value<<'\n';
+            output_result<<"The k element:"<<current_element->current_value<<'\n';
         }
 
         if(k<=how_many_elements_are/2 and k!=1){
@@ -451,15 +454,15 @@ public:
                 current_element=current_element->next_element;
             }
 
-            output_result<<current_element->current_value<<'\n';
+            output_result<<"The k element:"<<current_element->current_value<<'\n';
         }
 
         if(k==how_many_elements_are){
-            output_result<<last_element_in_queue->current_value<<'\n';
+            output_result<<"The k element:"<<last_element_in_queue->current_value<<'\n';
         }
 
         if(k==1){
-            output_result<<first_element_in_queue->current_value<<'\n';
+            output_result<<"The k element:"<<first_element_in_queue->current_value<<'\n';
         }
 
         if(k>how_many_elements_are){
@@ -592,6 +595,7 @@ public:
             how_many_elements_are++;
             how_many_did_you_add++;
         }
+        output_result<<"You added "<<how_many_did_you_add<<" more elements in "<<list_name<<"\n";
     }//This will insert elements from a different folder then the first one you accessed when you inserted the elements in your list first time
 };
 
@@ -609,6 +613,7 @@ public:
 
             output_result<<"Name the list:";
             input_command>>name_list;
+            output_result<<name_list<<'\n';
             int name_is_ok=1;
 
             for(long long i=0;i<how_much_data;i++){
@@ -677,13 +682,13 @@ public:
     } //Previous element from x , will call the class function for finding and printing a smaller element then the one you input
 
     void command_12(Lista &lista){
-        output_result<<lista.get_name();
+        output_result<<"Results:\n"<<lista.get_name();
         output_result<<"\n"<<&lista<<'\n';
     } //Name and memory place of the current list, will print out the returned value of the function get_name()
     // then will show the memory space where the current list is stored
 
     void command_13(Lista &lista){
-        output_result<<lista.get_how_many_elements()<<'\n';
+        output_result<<"Results:\n"<<lista.get_how_many_elements()<<'\n';
     } //How many elements are in the current list , will print the returned value of the function get_how_many_elements()
 
     void command_14(Lista &lista){
@@ -726,6 +731,8 @@ int main(){
     presentation(); //printing the menu
 
     while(true){ //until 0 is entered as a command this while will take an infinite amount of commands for the program
+
+        output_result<<"Command:";
 
         while(true){
             if(input_command>>command)
