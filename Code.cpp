@@ -497,6 +497,92 @@ public:
             output_result<<"There are no elements";
         }
     } //This will print all the elements in the list
+
+    void input_for_second_list(){
+        long long value_of_the_new_element,how_many_did_you_add=0;
+
+        while(!input_secondary_elements.eof()) {
+
+            while (true) {
+                if (input_secondary_elements >> value_of_the_new_element)
+                    break;
+                input_secondary_elements.clear();
+                input_secondary_elements.ignore();
+                break;
+            }
+
+            Element *new_element = new Element;
+
+            new_element->current_value = value_of_the_new_element;
+            new_element->next_element = NULL;
+            new_element->previous_element = NULL;
+            new_element->after_10 = NULL;
+            new_element->before_10 = NULL;
+
+
+            if (how_many_elements_are == 0) {
+
+                first_element_in_queue = new_element;
+                the_one_how_gets = new_element;
+            }
+
+            if (how_many_elements_are == 1) {
+
+                if (new_element->current_value > first_element_in_queue->current_value) {
+                    last_element_in_queue = new_element;
+                    first_element_in_queue->next_element = new_element;
+                    new_element->previous_element = first_element_in_queue;
+                } else {
+                    first_element_in_queue->previous_element = new_element;
+                    new_element->next_element = first_element_in_queue;
+                    last_element_in_queue = first_element_in_queue;
+                    first_element_in_queue = new_element;
+                }
+            }
+
+            if (how_many_elements_are > 1) {
+
+                if (new_element->current_value > first_element_in_queue->current_value and
+                    new_element->current_value < last_element_in_queue->current_value) {
+
+                    Element *element_for_verifying = first_element_in_queue;
+
+                    while (element_for_verifying->next_element != NULL) {
+                        if (new_element->current_value < element_for_verifying->current_value) {
+                            break;
+                        }
+                        element_for_verifying = element_for_verifying->next_element;
+                    }
+
+                    Element *previous_element_after_verifying = element_for_verifying->previous_element;
+                    previous_element_after_verifying->next_element = new_element;
+                    element_for_verifying->previous_element = new_element;
+                    new_element->previous_element = previous_element_after_verifying;
+                    new_element->next_element = element_for_verifying;
+
+                }
+
+
+                if (new_element->current_value >= last_element_in_queue->current_value) {
+                    new_element->previous_element = last_element_in_queue;
+                    last_element_in_queue->next_element = new_element;
+                    last_element_in_queue = new_element;
+
+                } else {
+                    if (new_element->current_value <= first_element_in_queue->current_value) {
+
+                        new_element->next_element = first_element_in_queue;
+                        first_element_in_queue->previous_element = new_element;
+                        first_element_in_queue = new_element;
+
+                    }
+                }
+            }
+
+            how_many_elements_are++;
+            how_many_did_you_add++;
+        }
+    }//This will insert elements from a different folder then the first one you accessed when you inserted the elements in your list first time
 };
 
 vector<Lista> data_for_program; //The vector will retain the List as an element so you will be able to have more List with different data in each of them at the same time
@@ -512,7 +598,7 @@ public:
         while(true){
 
             output_result<<"Name the list:";
-            cin>>name_list;
+            input_command>>name_list;
             int name_is_ok=1;
 
             for(long long i=0;i<how_much_data;i++){
@@ -536,10 +622,10 @@ public:
     void command_2(Lista &lista, Lista &lista2){
 
         if(strcmp(lista.get_name(),lista2.get_name())==0)
-            cout<<"You are already in this list!\n";
+            output_result<<"You are already in this list!\n";
         else{
             swap(lista, lista2);
-            cout<<"You have successfully transferred to "<<lista.get_name();
+            output_result<<"You have successfully transferred to "<<lista.get_name()<<'\n';
         }
     } //Change current list; this command will use the function swap, to interchange every element of the
 
@@ -589,6 +675,11 @@ public:
     void command_13(Lista &lista){
         output_result<<lista.get_how_many_elements()<<'\n';
     } //How many elements are in the current list , will print the returned value of the function get_how_many_elements()
+
+    void command_14(Lista &lista){
+        lista.input_for_second_list();
+        lista.creating_the_skip_list();
+    }//This command will access the elements in a different folder so you can add more elements in your list, or in a new list
 };
 
 void presentation(){
@@ -606,6 +697,7 @@ void presentation(){
           " 11. Previous element from x\n"
           " 12. Name and memory place of the current list\n"
           " 13. How many elements are in the current list\n"
+          " 14. Input elements for a new list from a new folder\n"
           " 0. Exit""";
     output_result<<"\nInput a command:";
 } //A function to print out the options of the menu
@@ -801,7 +893,11 @@ int main(){
             Meniu.command_13(current_list);
         }
 
-        if(command>13 or command<0) {
+        if(command==14){
+            Meniu.command_14(current_list);
+        }
+
+        if(command>14 or command<0) {
             output_result << "Invalid option";
         } //If the command is bigger or lower then what the menu will offer this if will print Invalid option
 
