@@ -162,10 +162,15 @@ public:
                         Element *element_for_verifying = first_element_in_queue;
 
                         while (element_for_verifying->next_element != NULL) {
+                            if(element_for_verifying->after_10!=NULL and element_for_verifying->after_10->current_value<=new_element->current_value) {
+                                element_for_verifying=element_for_verifying->after_10; //is using the skip list to get faster in the range of the element we want
+                            }
+                            else{
+                                element_for_verifying=element_for_verifying->next_element;
+                            }
                             if (new_element->current_value < element_for_verifying->current_value) {
                                 break;
                             }
-                            element_for_verifying = element_for_verifying->next_element;
                         } //this while will find the position where to insert the new element using the skip list
 
                         Element *previous_element_after_verifying = element_for_verifying->previous_element;
@@ -253,10 +258,15 @@ public:
                         Element *element_for_verifying = first_element_in_queue;
 
                         while (element_for_verifying->next_element != NULL) {
+                            if(element_for_verifying->after_10!=NULL and element_for_verifying->after_10->current_value<=new_element->current_value) {
+                                element_for_verifying=element_for_verifying->after_10; //is using the skip list to get faster in the range of the element we want
+                            }
+                            else{
+                                element_for_verifying=element_for_verifying->next_element;
+                            }
                             if (new_element->current_value < element_for_verifying->current_value) {
                                 break;
                             }
-                            element_for_verifying=element_for_verifying->next_element;
                         }
 
                         Element *previous_element_after_verifying = element_for_verifying->previous_element;
