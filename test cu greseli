@@ -5,12 +5,12 @@ second_list //acesta reprezinta inputul pentru numele listei, acesta poate fi fo
 14 //comanda pentru a citi din al 2-lea fisier separat pentru ca lista creaata de noi sa aibe elemente
 //incepem sa facem operatii pe multime sa aratam ca functioneaza normal
 5 //maximul listei
-!
+! //greseala
 7 345// este 345 in lista?
 7 8674
 8 8674// sterge 8674
 7 8674
-.
+. 
 9 q 3645// printeaza al 3645-lea element din lista
 10 97865// succesorul lui 97865
 11 432// predecesorul lui 432
