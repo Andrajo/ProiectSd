@@ -309,31 +309,51 @@ public:
             Element *current_element = first_element_in_queue;
             int in_queue = 0;
 
-            while (current_element->next_element != NULL) {
-                if (current_element->after_10 != NULL and current_element->after_10->current_value <= element) {
-                    current_element = current_element->after_10;//is using the skip list to get faster in the range of the element we want
-                }
-                else {
-                    if (current_element->current_value == element) {
-                        in_queue = 1;
-                        break;
-                    }
-                    current_element = current_element->next_element;
-                }
-            }
-
-            if (in_queue == 1) {
-                if (current_element->previous_element != NULL)
-                    current_element->previous_element->next_element = current_element->next_element;
-                if (current_element->next_element != NULL)
-                    current_element->next_element->previous_element = current_element->previous_element;
+            if(element==last_element_in_queue->current_value){
+                last_element_in_queue=last_element_in_queue->previous_element;
+                last_element_in_queue->next_element->previous_element=NULL;
+                last_element_in_queue->next_element=NULL;
+                last_element_in_queue->after_10=NULL;
+                last_element_in_queue->before_10=NULL;
                 output_result << "Element deleted successfully\n";
-
                 how_many_elements_are--;
+            }
+            else{
+                while (current_element->next_element != NULL) {
+                    if (current_element->after_10 != NULL and current_element->after_10->current_value <= element) {
+                        current_element = current_element->after_10;//is using the skip list to get faster in the range of the element we want
+                    }
+                    else {
+                        if (current_element->current_value == element) {
+                            in_queue = 1;
+                            break;
+                        }
+                        current_element = current_element->next_element;
+                    }
+                }
 
-            }// this if will delete the element in both ways, in the previous and in the next, if there is a next or a previous
-            else
-                output_result<<"The element you want to delete is not in the list\n";
+                if (in_queue == 1) {
+                    if (current_element!= first_element_in_queue){
+                        current_element->previous_element->next_element = current_element->next_element;
+                        current_element->next_element->previous_element = current_element->previous_element;
+                        current_element->after_10=NULL;
+                        current_element->before_10=NULL;
+                    }
+                    else{
+                        first_element_in_queue=first_element_in_queue->next_element;
+                        first_element_in_queue->previous_element->next_element=NULL;
+                        first_element_in_queue->previous_element=NULL;
+                        current_element->after_10=NULL;
+                        current_element->before_10=NULL;
+                    }
+                    output_result << "Element deleted successfully\n";
+
+                    how_many_elements_are--;
+
+                }// this if will delete the element in both ways, in the previous and in the next, if there is a next or a previous
+                else
+                    output_result<<"The element you want to delete is not in the list\n";
+            }
         }
         else{
             output_result<<"There are no elements\n";
@@ -362,27 +382,28 @@ public:
             Element *current_element=first_element_in_queue;
             bool was_found_one=false;
 
-            while(current_element->next_element!=NULL){
-
-                if(current_element->after_10!=NULL and current_element->after_10->current_value<=element) {
-                    current_element=current_element->after_10;//is using the skip list to get faster in the range of the element we want
-                }
-                else {
-
-                    if (current_element->current_value > element) {
-                        the_smallest_big = current_element;
-                        was_found_one = true;
-                        break;
-                    }
-
-                    current_element = current_element->next_element;
-                }
-            }
-
-            if(was_found_one == false)
+            if(element>=last_element_in_queue->current_value){
                 output_result<<"There was no element bigger than "<<element<<'\n';
-            else
+            }
+            else{
+                while(current_element->next_element!=NULL){
+
+                    if(current_element->after_10!=NULL and current_element->after_10->current_value<=element) {
+                        current_element=current_element->after_10;//is using the skip list to get faster in the range of the element we want
+                    }
+                    else {
+
+                        if (current_element->current_value > element) {
+                            the_smallest_big = current_element;
+                            was_found_one = true;
+                        }
+                        if(was_found_one==true)
+                            break;
+                        current_element = current_element->next_element;
+                    }
+                }
                 output_result<<"Successor:"<<the_smallest_big->current_value<<'\n';
+            }
         }
         else{
             output_result<<"There are no elements\n";
@@ -393,30 +414,32 @@ public:
 
         if(how_many_elements_are>0){
 
-            Element *the_biggest_small,*current_element=last_element_in_queue;
+            Element *the_biggest_small;
+            Element *current_element=last_element_in_queue;
             bool was_found_one=false;
 
-            while(current_element->previous_element!=NULL) {
-
-                if(current_element->before_10!=NULL and current_element->before_10->current_value>=element) {
-                    current_element=current_element->before_10;//is using the skip list to get faster in the range of the element we want
-                }
-                else {
-
-                    if (current_element->current_value < element) {
-                        the_biggest_small = current_element;
-                        was_found_one = true;
-                        break;
-                    }
-
-                    current_element = current_element->previous_element;
-                }
-            }
-
-            if(was_found_one == false)
+            if(element<=first_element_in_queue->current_value){
                 output_result<<"There was no element smaller than "<<element<<'\n';
-            else
+            }
+            else{
+                while(current_element->previous_element!=NULL) {
+
+                    if(current_element->before_10!=NULL and current_element->before_10->current_value>=element) {
+                        current_element=current_element->before_10;//is using the skip list to get faster in the range of the element we want
+                    }
+                    else {
+
+                        if (current_element->current_value < element) {
+                            the_biggest_small = current_element;
+                            was_found_one = true;
+                        }
+                        if(was_found_one==true)
+                            break;
+                        current_element = current_element->previous_element;
+                    }
+                }
                 output_result<<"Predecessor:"<<the_biggest_small->current_value<<'\n';
+            }
         }
         else{
             output_result<<"There are no elements\n";
@@ -431,7 +454,7 @@ public:
         //there are 2 special cases , if k is first or last element , then the program will print the respective part, and one
         // if the k is bigger then the number of elements in the list, then the program will print a message that there is not an k element
 
-        if(k>how_many_elements_are/2 and k!=how_many_elements_are){
+        if(k>how_many_elements_are/2 and k<how_many_elements_are){
 
             long long current_position=how_many_elements_are;
             Element *current_element=last_element_in_queue;
@@ -444,7 +467,7 @@ public:
             output_result<<"The k element:"<<current_element->current_value<<'\n';
         }
 
-        if(k<=how_many_elements_are/2 and k!=1){
+        if(k<=how_many_elements_are/2 and k>1){
 
             long long current_position=1;
             Element *current_element=first_element_in_queue;
@@ -477,7 +500,14 @@ public:
     bool is_in_queue(long long element){
 
         Element *current_element = first_element_in_queue;
-
+        if(first_element_in_queue->current_value==element or last_element_in_queue->current_value==element) {
+            output_result << "Is in queue\n";
+            return true; //if the element is found, return true
+        }
+        if(first_element_in_queue->current_value>element or last_element_in_queue->current_value<element) {
+            output_result << "Is doesn't appear in the queue\n";
+            return false;
+        }
         while (current_element != NULL) {
             if(current_element->after_10!=NULL and current_element->after_10->current_value<element) {
                 current_element=current_element->after_10; //is using the skip list to get faster in the range of the element we want
